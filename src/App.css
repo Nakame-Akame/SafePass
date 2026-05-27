@@ -1,0 +1,611 @@
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+  font-family: 'Inter', sans-serif;
+
+  background:
+    radial-gradient(circle at top left, #1e293b 0%, transparent 35%),
+    radial-gradient(circle at bottom right, #312e81 0%, transparent 35%),
+    linear-gradient(135deg, #020617, #0f172a);
+
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.safe-pass-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+
+  width: 100%;
+  max-width: 520px;
+
+  padding: 34px;
+
+  border-radius: 28px;
+
+  background:
+    rgba(255,255,255,0.07);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter:
+    blur(22px);
+
+  -webkit-backdrop-filter:
+    blur(22px);
+
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+
+  position: relative;
+
+  overflow: hidden;
+
+  animation:
+    fadeIn 0.5s ease;
+}
+
+/* =========================================================
+   CYBER GLOW
+========================================================= */
+
+.card::before {
+
+  content: '';
+
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(59,130,246,0.22),
+      transparent 70%
+    );
+
+  top: -100px;
+  right: -100px;
+
+  z-index: 0;
+}
+
+.card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header h1 {
+
+  font-size: 2.5rem;
+
+  font-weight: 900;
+
+  margin-bottom: 8px;
+
+  letter-spacing: -1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #38bdf8,
+      #818cf8,
+      #22d3ee
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+
+  color: #94a3b8;
+
+  font-size: 1rem;
+
+  letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   INPUT WRAPPER
+========================================================= */
+
+.input-wrapper {
+
+  position: relative;
+
+  margin-bottom: 22px;
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.password-input {
+
+  width: 100%;
+
+  padding:
+    18px 60px 18px 18px;
+
+  border-radius: 18px;
+
+  border:
+    2px solid transparent;
+
+  background:
+    rgba(255,255,255,0.05);
+
+  color: white;
+
+  font-size: 1rem;
+
+  outline: none;
+
+  transition:
+    all 0.25s ease;
+}
+
+.password-input::placeholder {
+  color: #64748b;
+}
+
+.password-input:focus {
+
+  border-color:
+    #38bdf8;
+
+  box-shadow:
+    0 0 0 4px rgba(56,189,248,0.15);
+}
+
+/* =========================================================
+   TOGGLE BUTTON
+========================================================= */
+
+.toggle-btn {
+
+  position: absolute;
+
+  right: 14px;
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+
+  background: transparent;
+
+  border: none;
+
+  color: white;
+
+  font-size: 1.1rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease;
+}
+
+.toggle-btn:hover {
+  transform:
+    translateY(-50%) scale(1.1);
+}
+
+/* =========================================================
+   STRENGTH METER
+========================================================= */
+
+.meter {
+
+  width: 100%;
+  height: 14px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  margin-bottom: 18px;
+}
+
+.meter-fill {
+
+  height: 100%;
+
+  border-radius: 999px;
+
+  transition:
+    width 0.35s ease,
+    background 0.35s ease;
+
+  box-shadow:
+    0 0 18px rgba(255,255,255,0.25);
+}
+
+/* =========================================================
+   ANALYSIS HEADER
+========================================================= */
+
+.analysis-header {
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+
+  gap: 10px;
+}
+
+.analysis-header h2 {
+
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.entropy {
+
+  background:
+    rgba(255,255,255,0.06);
+
+  padding:
+    8px 12px;
+
+  border-radius: 12px;
+
+  color:
+    #cbd5e1;
+
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   CRACK BOX
+========================================================= */
+
+.crack-box {
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 10px;
+
+  background:
+    rgba(255,255,255,0.05);
+
+  padding: 16px;
+
+  border-radius: 16px;
+
+  margin-bottom: 20px;
+
+  border:
+    1px solid rgba(255,255,255,0.05);
+}
+
+.crack-box span {
+  color: #cbd5e1;
+}
+
+.crack-box strong {
+  color: #38bdf8;
+}
+
+/* =========================================================
+   TIPS
+========================================================= */
+
+.tips-box {
+
+  background:
+    rgba(239,68,68,0.08);
+
+  border:
+    1px solid rgba(239,68,68,0.12);
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  margin-bottom: 24px;
+}
+
+.tips-box h3 {
+
+  margin-bottom: 12px;
+
+  color: #f87171;
+
+  font-size: 1rem;
+}
+
+.tips-box p {
+
+  color: #fecaca;
+
+  margin-bottom: 10px;
+
+  font-size: 0.92rem;
+}
+
+.tips-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   BUTTON GROUP
+========================================================= */
+
+.button-group {
+
+  display: flex;
+
+  gap: 14px;
+
+  margin-bottom: 24px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.generate-btn,
+.copy-btn {
+
+  flex: 1;
+
+  border: none;
+
+  border-radius: 16px;
+
+  padding: 15px;
+
+  font-size: 0.95rem;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    opacity 0.2s ease;
+}
+
+/* =========================================================
+   GENERATE
+========================================================= */
+
+.generate-btn {
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: white;
+
+  box-shadow:
+    0 8px 24px rgba(37,99,235,0.35);
+}
+
+.generate-btn:hover {
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 12px 28px rgba(37,99,235,0.45);
+}
+
+/* =========================================================
+   COPY
+========================================================= */
+
+.copy-btn {
+
+  background:
+    rgba(255,255,255,0.05);
+
+  color: white;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.copy-btn:hover {
+
+  transform:
+    translateY(-2px);
+
+  background:
+    rgba(255,255,255,0.1);
+}
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+button:disabled {
+
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   REQUIREMENTS
+========================================================= */
+
+.requirements {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+}
+
+.requirement {
+
+  background:
+    rgba(255,255,255,0.05);
+
+  border:
+    1px solid rgba(255,255,255,0.06);
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  color:
+    #cbd5e1;
+
+  font-size: 0.9rem;
+
+  text-align: center;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.info-footer {
+
+  text-align: center;
+
+  border-top:
+    1px solid rgba(255,255,255,0.06);
+
+  padding-top: 20px;
+}
+
+.info-footer p {
+
+  color:
+    #94a3b8;
+
+  font-size: 0.88rem;
+
+  line-height: 1.6;
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeIn {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .card {
+
+    padding: 24px;
+  }
+
+  .header h1 {
+
+    font-size: 2rem;
+  }
+
+  .analysis-header {
+
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button-group {
+
+    flex-direction: column;
+  }
+
+  .requirements {
+
+    grid-template-columns: 1fr;
+  }
+
+  .crack-box {
+
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
