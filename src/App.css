@@ -1,6 +1,6 @@
-/* =========================================================
-   RESET
-========================================================= */
+/* ======================================================
+   GLOBAL
+====================================================== */
 
 * {
   margin: 0;
@@ -8,179 +8,116 @@
   box-sizing: border-box;
 }
 
-/* =========================================================
-   BODY
-========================================================= */
-
 body {
-  font-family: 'Inter', sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
 
   background:
-    radial-gradient(circle at top left, #1e293b 0%, transparent 35%),
-    radial-gradient(circle at bottom right, #312e81 0%, transparent 35%),
-    linear-gradient(135deg, #020617, #0f172a);
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #111827,
+      #1e293b
+    );
 
+  min-height: 100vh;
+
+  color: white;
+}
+
+/* ======================================================
+   CONTAINER
+====================================================== */
+
+.safe-pass-container {
   min-height: 100vh;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  color: white;
-
-  overflow-x: hidden;
+  padding: 30px;
 }
 
-/* =========================================================
-   MAIN CONTAINER
-========================================================= */
-
-.safe-pass-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 24px;
-}
-
-/* =========================================================
+/* ======================================================
    CARD
-========================================================= */
+====================================================== */
 
 .card {
 
   width: 100%;
   max-width: 520px;
 
-  padding: 34px;
+  background:
+    rgba(15, 23, 42, 0.82);
+
+  backdrop-filter: blur(14px);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
 
   border-radius: 28px;
 
-  background:
-    rgba(255,255,255,0.07);
-
-  border:
-    1px solid rgba(255,255,255,0.08);
-
-  backdrop-filter:
-    blur(22px);
-
-  -webkit-backdrop-filter:
-    blur(22px);
+  padding: 35px;
 
   box-shadow:
-    0 8px 40px rgba(0,0,0,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.05);
-
-  position: relative;
-
-  overflow: hidden;
-
-  animation:
-    fadeIn 0.5s ease;
+    0 10px 40px rgba(0, 0, 0, 0.45);
 }
 
-/* =========================================================
-   CYBER GLOW
-========================================================= */
-
-.card::before {
-
-  content: '';
-
-  position: absolute;
-
-  width: 240px;
-  height: 240px;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(59,130,246,0.22),
-      transparent 70%
-    );
-
-  top: -100px;
-  right: -100px;
-
-  z-index: 0;
-}
-
-.card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* =========================================================
+/* ======================================================
    HEADER
-========================================================= */
+====================================================== */
 
 .header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 }
 
 .header h1 {
 
-  font-size: 2.5rem;
-
-  font-weight: 900;
+  font-size: 2.3rem;
+  font-weight: 800;
 
   margin-bottom: 8px;
 
   letter-spacing: -1px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #38bdf8,
-      #818cf8,
-      #22d3ee
-    );
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
 
   color: #94a3b8;
 
-  font-size: 1rem;
+  font-size: 0.95rem;
 
   letter-spacing: 0.5px;
 }
 
-/* =========================================================
-   INPUT WRAPPER
-========================================================= */
+/* ======================================================
+   INPUT
+====================================================== */
 
 .input-wrapper {
 
   position: relative;
 
-  margin-bottom: 22px;
+  margin-bottom: 25px;
 }
-
-/* =========================================================
-   INPUT
-========================================================= */
 
 .password-input {
 
   width: 100%;
 
-  padding:
-    18px 60px 18px 18px;
-
-  border-radius: 18px;
+  background: #0f172a;
 
   border:
-    2px solid transparent;
+    1px solid rgba(255, 255, 255, 0.08);
 
-  background:
-    rgba(255,255,255,0.05);
+  border-radius: 16px;
+
+  padding:
+    16px 60px 16px 18px;
 
   color: white;
 
@@ -189,35 +126,33 @@ body {
   outline: none;
 
   transition:
-    all 0.25s ease;
+    border 0.25s ease,
+    transform 0.2s ease;
+}
+
+.password-input:focus {
+
+  border-color: #3b82f6;
+
+  transform: scale(1.01);
 }
 
 .password-input::placeholder {
   color: #64748b;
 }
 
-.password-input:focus {
-
-  border-color:
-    #38bdf8;
-
-  box-shadow:
-    0 0 0 4px rgba(56,189,248,0.15);
-}
-
-/* =========================================================
+/* ======================================================
    TOGGLE BUTTON
-========================================================= */
+====================================================== */
 
 .toggle-btn {
 
   position: absolute;
 
-  right: 14px;
   top: 50%;
+  right: 14px;
 
-  transform:
-    translateY(-50%);
+  transform: translateY(-50%);
 
   background: transparent;
 
@@ -225,7 +160,7 @@ body {
 
   color: white;
 
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 
   cursor: pointer;
 
@@ -235,12 +170,13 @@ body {
 
 .toggle-btn:hover {
   transform:
-    translateY(-50%) scale(1.1);
+    translateY(-50%)
+    scale(1.1);
 }
 
-/* =========================================================
+/* ======================================================
    STRENGTH METER
-========================================================= */
+====================================================== */
 
 .meter {
 
@@ -248,32 +184,29 @@ body {
   height: 14px;
 
   background:
-    rgba(255,255,255,0.06);
+    rgba(255, 255, 255, 0.08);
 
   border-radius: 999px;
 
   overflow: hidden;
 
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .meter-fill {
 
   height: 100%;
 
-  border-radius: 999px;
+  border-radius: inherit;
 
   transition:
-    width 0.35s ease,
-    background 0.35s ease;
-
-  box-shadow:
-    0 0 18px rgba(255,255,255,0.25);
+    width 0.4s ease,
+    background 0.3s ease;
 }
 
-/* =========================================================
+/* ======================================================
    ANALYSIS HEADER
-========================================================= */
+====================================================== */
 
 .analysis-header {
 
@@ -282,78 +215,68 @@ body {
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: 20px;
-
   gap: 10px;
+
+  margin-bottom: 18px;
 }
 
 .analysis-header h2 {
 
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+
+  font-weight: 700;
 }
 
 .entropy {
 
-  background:
-    rgba(255,255,255,0.06);
+  color: #cbd5e1;
 
-  padding:
-    8px 12px;
-
-  border-radius: 12px;
-
-  color:
-    #cbd5e1;
-
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
-/* =========================================================
+/* ======================================================
    CRACK BOX
-========================================================= */
+====================================================== */
 
 .crack-box {
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 16px;
+
+  padding: 16px 18px;
+
+  margin-bottom: 22px;
 
   display: flex;
 
   justify-content: space-between;
   align-items: center;
 
-  gap: 10px;
+  gap: 15px;
 
-  background:
-    rgba(255,255,255,0.05);
-
-  padding: 16px;
-
-  border-radius: 16px;
-
-  margin-bottom: 20px;
-
-  border:
-    1px solid rgba(255,255,255,0.05);
-}
-
-.crack-box span {
-  color: #cbd5e1;
+  color: #e2e8f0;
 }
 
 .crack-box strong {
-  color: #38bdf8;
+  color: white;
 }
 
-/* =========================================================
-   TIPS
-========================================================= */
+/* ======================================================
+   TIPS BOX
+====================================================== */
 
 .tips-box {
 
   background:
-    rgba(239,68,68,0.08);
+    rgba(239, 68, 68, 0.08);
 
   border:
-    1px solid rgba(239,68,68,0.12);
+    1px solid rgba(239, 68, 68, 0.2);
 
   border-radius: 18px;
 
@@ -366,40 +289,36 @@ body {
 
   margin-bottom: 12px;
 
-  color: #f87171;
-
   font-size: 1rem;
+
+  color: #fca5a5;
 }
 
 .tips-box p {
 
+  margin-bottom: 8px;
+
   color: #fecaca;
 
-  margin-bottom: 10px;
-
-  font-size: 0.92rem;
+  font-size: 0.95rem;
 }
 
 .tips-box p:last-child {
   margin-bottom: 0;
 }
 
-/* =========================================================
-   BUTTON GROUP
-========================================================= */
+/* ======================================================
+   BUTTONS
+====================================================== */
 
 .button-group {
 
   display: flex;
 
-  gap: 14px;
+  gap: 12px;
 
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
-
-/* =========================================================
-   BUTTONS
-========================================================= */
 
 .generate-btn,
 .copy-btn {
@@ -413,19 +332,14 @@ body {
   padding: 15px;
 
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
-    box-shadow 0.25s ease,
     opacity 0.2s ease;
 }
-
-/* =========================================================
-   GENERATE
-========================================================= */
 
 .generate-btn {
 
@@ -433,64 +347,37 @@ body {
     linear-gradient(
       135deg,
       #2563eb,
-      #4f46e5
+      #3b82f6
     );
 
   color: white;
-
-  box-shadow:
-    0 8px 24px rgba(37,99,235,0.35);
 }
-
-.generate-btn:hover {
-
-  transform:
-    translateY(-2px);
-
-  box-shadow:
-    0 12px 28px rgba(37,99,235,0.45);
-}
-
-/* =========================================================
-   COPY
-========================================================= */
 
 .copy-btn {
 
   background:
-    rgba(255,255,255,0.05);
+    rgba(255, 255, 255, 0.08);
 
   color: white;
-
-  border:
-    1px solid rgba(255,255,255,0.08);
 }
 
+.generate-btn:hover,
 .copy-btn:hover {
 
-  transform:
-    translateY(-2px);
-
-  background:
-    rgba(255,255,255,0.1);
+  transform: translateY(-2px);
 }
 
-/* =========================================================
-   DISABLED
-========================================================= */
-
-button:disabled {
+.generate-btn:disabled,
+.copy-btn:disabled {
 
   opacity: 0.6;
 
   cursor: not-allowed;
-
-  transform: none !important;
 }
 
-/* =========================================================
+/* ======================================================
    REQUIREMENTS
-========================================================= */
+====================================================== */
 
 .requirements {
 
@@ -507,94 +394,76 @@ button:disabled {
 .requirement {
 
   background:
-    rgba(255,255,255,0.05);
+    rgba(255, 255, 255, 0.05);
 
   border:
-    1px solid rgba(255,255,255,0.06);
-
-  padding: 14px;
+    1px solid rgba(255, 255, 255, 0.05);
 
   border-radius: 14px;
 
-  color:
-    #cbd5e1;
-
-  font-size: 0.9rem;
+  padding: 12px;
 
   text-align: center;
+
+  font-size: 0.88rem;
+
+  color: #dbeafe;
 }
 
-/* =========================================================
+/* ======================================================
    FOOTER
-========================================================= */
+====================================================== */
 
 .info-footer {
 
-  text-align: center;
-
   border-top:
-    1px solid rgba(255,255,255,0.06);
+    1px solid rgba(255, 255, 255, 0.08);
 
-  padding-top: 20px;
+  padding-top: 22px;
+
+  text-align: center;
 }
 
 .info-footer p {
 
-  color:
-    #94a3b8;
+  color: #94a3b8;
 
-  font-size: 0.88rem;
+  font-size: 0.9rem;
 
-  line-height: 1.6;
+  margin-bottom: 8px;
+
+  line-height: 1.5;
 }
 
-/* =========================================================
-   ANIMATION
-========================================================= */
-
-@keyframes fadeIn {
-
-  from {
-
-    opacity: 0;
-
-    transform:
-      translateY(20px);
-  }
-
-  to {
-
-    opacity: 1;
-
-    transform:
-      translateY(0);
-  }
+.info-footer p:last-child {
+  margin-bottom: 0;
 }
 
-/* =========================================================
+/* ======================================================
    RESPONSIVE
-========================================================= */
+====================================================== */
 
 @media (max-width: 600px) {
 
   .card {
-
-    padding: 24px;
-  }
-
-  .header h1 {
-
-    font-size: 2rem;
+    padding: 25px;
   }
 
   .analysis-header {
 
     flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .crack-box {
+
+    flex-direction: column;
+
     align-items: flex-start;
   }
 
   .button-group {
-
     flex-direction: column;
   }
 
@@ -603,9 +472,7 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .crack-box {
-
-    flex-direction: column;
-    align-items: flex-start;
+  .header h1 {
+    font-size: 1.9rem;
   }
 }

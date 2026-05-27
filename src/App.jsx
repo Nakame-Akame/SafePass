@@ -21,8 +21,10 @@ const DEFAULT_ANALYSIS = {
 };
 
 /* ======================================================
-   WEAK PATTERNS
+   CONSTANTS
 ====================================================== */
+
+const SYMBOL_COUNT = 19;
 
 const weakPatterns = [
   /1234/,
@@ -39,19 +41,97 @@ const weakPatterns = [
 
 function generateSecurePassword(length = 18) {
 
-  const chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}<>?';
+  const uppercase =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  const lowercase =
+    'abcdefghijklmnopqrstuvwxyz';
+
+  const numbers =
+    '0123456789';
+
+  const symbols =
+    '!@#$%^&*()_+[]{}<>?';
+
+  const allChars =
+    uppercase +
+    lowercase +
+    numbers +
+    symbols;
+
+  const guaranteed = [
+    uppercase[
+      crypto.getRandomValues(
+        new Uint32Array(1)
+      )[0] % uppercase.length
+    ],
+
+    lowercase[
+      crypto.getRandomValues(
+        new Uint32Array(1)
+      )[0] % lowercase.length
+    ],
+
+    numbers[
+      crypto.getRandomValues(
+        new Uint32Array(1)
+      )[0] % numbers.length
+    ],
+
+    symbols[
+      crypto.getRandomValues(
+        new Uint32Array(1)
+      )[0] % symbols.length
+    ]
+  ];
+
+  const remaining =
+    length - guaranteed.length;
 
   const randomValues =
-    new Uint32Array(length);
+    new Uint32Array(remaining);
 
   crypto.getRandomValues(randomValues);
 
-  return Array.from(randomValues)
-    .map(value =>
-      chars[value % chars.length]
-    )
-    .join('');
+  const randomChars =
+    Array.from(randomValues)
+      .map(
+        value =>
+          allChars[
+            value % allChars.length
+          ]
+      );
+
+  const finalPassword = [
+    ...guaranteed,
+    ...randomChars
+  ];
+
+  /* ======================================================
+     SHUFFLE
+  ====================================================== */
+
+  for (
+    let i = finalPassword.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      crypto.getRandomValues(
+        new Uint32Array(1)
+      )[0] % (i + 1);
+
+    [
+      finalPassword[i],
+      finalPassword[j]
+    ] = [
+      finalPassword[j],
+      finalPassword[i]
+    ];
+  }
+
+  return finalPassword.join('');
 }
 
 /* ======================================================
@@ -62,15 +142,24 @@ function calculateEntropy(password) {
 
   let charset = 0;
 
-  if (/[a-z]/.test(password)) charset += 26;
-  if (/[A-Z]/.test(password)) charset += 26;
-  if (/[0-9]/.test(password)) charset += 10;
-  if (/[^\w\s]/.test(password)) charset += 32;
+  if (/[a-z]/.test(password))
+    charset += 26;
 
-  if (charset === 0) return 0;
+  if (/[A-Z]/.test(password))
+    charset += 26;
+
+  if (/[0-9]/.test(password))
+    charset += 10;
+
+  if (/[^\w\s]/.test(password))
+    charset += SYMBOL_COUNT;
+
+  if (charset === 0)
+    return 0;
 
   return Math.round(
-    password.length * Math.log2(charset)
+    password.length *
+    Math.log2(charset)
   );
 }
 
@@ -81,116 +170,122 @@ function calculateEntropy(password) {
 function estimateCrackTime(entropy) {
 
   if (entropy < 28)
-    return 'Segundos ⚠️';
+    return 'Instantáneo ⚠️';
 
   if (entropy < 36)
-    return 'Horas';
+    return 'Minutos';
 
   if (entropy < 60)
-    return 'Años';
+    return 'Horas';
 
   if (entropy < 80)
+    return 'Años';
+
+  if (entropy < 100)
     return 'Siglos 🔥';
 
   return 'Miles de años 🛡️';
 }
 
 /* ======================================================
-   PASSWORD ANALYZER
+   SCORE CALCULATION
 ====================================================== */
 
-function evaluatePassword(password) {
-
-  if (!password)
-    return DEFAULT_ANALYSIS;
+function calculateScore(checks) {
 
   let score = 0;
 
-  const checks = {
-
-    length8:
-      password.length >= 8,
-
-    length12:
-      password.length >= 12,
-
-    numbers:
-      /\d/.test(password),
-
-    specials:
-      /[^\w\s]/.test(password),
-
-    lowercase:
-      /[a-z]/.test(password),
-
-    uppercase:
-      /[A-Z]/.test(password),
-
-    patterns:
-      weakPatterns.some((regex) =>
-        regex.test(password)
-      )
-  };
-
-  const tips = [];
-
-  /* ======================================================
-     AI SCORING
-  ====================================================== */
-
-  if (checks.length8) {
+  if (checks.length8)
     score += 15;
-  } else {
-    tips.push('Usa mínimo 8 caracteres');
-  }
 
-  if (checks.length12) {
+  if (checks.length12)
     score += 15;
-  } else {
-    tips.push('12+ caracteres es ideal');
-  }
 
-  if (checks.numbers) {
+  if (checks.numbers)
     score += 15;
-  } else {
-    tips.push('Agrega números');
-  }
 
-  if (checks.specials) {
+  if (checks.specials)
     score += 20;
-  } else {
-    tips.push('Incluye símbolos especiales');
-  }
 
   if (
     checks.lowercase &&
     checks.uppercase
   ) {
     score += 20;
-  } else {
-    tips.push('Combina mayúsculas y minúsculas');
   }
 
-  if (!checks.patterns) {
+  if (!checks.weakPatterns) {
     score += 15;
   } else {
     score -= 20;
-    tips.push('Evita patrones comunes');
   }
 
-  /* ======================================================
-     ENTROPY
-  ====================================================== */
+  return Math.max(
+    0,
+    Math.min(score, 100)
+  );
+}
 
-  const entropy =
-    calculateEntropy(password);
+/* ======================================================
+   SECURITY TIPS
+====================================================== */
 
-  const crackTime =
-    estimateCrackTime(entropy);
+function generateTips(checks) {
 
-  /* ======================================================
-     CLASSIFICATION
-  ====================================================== */
+  const tips = [];
+
+  if (!checks.length8) {
+    tips.push(
+      'Usa mínimo 8 caracteres'
+    );
+  }
+
+  if (!checks.length12) {
+    tips.push(
+      '12 o más caracteres es lo ideal'
+    );
+  }
+
+  if (!checks.numbers) {
+    tips.push(
+      'Incluye al menos un número'
+    );
+  }
+
+  if (!checks.specials) {
+    tips.push(
+      'Agrega símbolos especiales'
+    );
+  }
+
+  if (
+    !checks.lowercase ||
+    !checks.uppercase
+  ) {
+    tips.push(
+      'Combina mayúsculas y minúsculas'
+    );
+  }
+
+  if (checks.weakPatterns) {
+    tips.push(
+      'Evita patrones comunes o repetitivos'
+    );
+  }
+
+  return tips;
+}
+
+/* ======================================================
+   PASSWORD CLASSIFICATION
+====================================================== */
+
+function classifyStrength(
+  score,
+  entropy,
+  crackTime,
+  tips
+) {
 
   if (score <= 40) {
 
@@ -219,7 +314,7 @@ function evaluatePassword(password) {
   }
 
   return {
-    label: 'Seguridad Segura 🟢',
+    label: 'Seguridad Fuerte 🟢',
     color: '#22c55e',
     progress: score,
     entropy,
@@ -227,6 +322,61 @@ function evaluatePassword(password) {
     tips,
     level: 'STRONG'
   };
+}
+
+/* ======================================================
+   PASSWORD ANALYZER
+====================================================== */
+
+function evaluatePassword(password) {
+
+  if (!password)
+    return DEFAULT_ANALYSIS;
+
+  const checks = {
+
+    length8:
+      password.length >= 8,
+
+    length12:
+      password.length >= 12,
+
+    numbers:
+      /\d/.test(password),
+
+    specials:
+      /[^\w\s]/.test(password),
+
+    lowercase:
+      /[a-z]/.test(password),
+
+    uppercase:
+      /[A-Z]/.test(password),
+
+    weakPatterns:
+      weakPatterns.some(regex =>
+        regex.test(password)
+      )
+  };
+
+  const score =
+    calculateScore(checks);
+
+  const tips =
+    generateTips(checks);
+
+  const entropy =
+    calculateEntropy(password);
+
+  const crackTime =
+    estimateCrackTime(entropy);
+
+  return classifyStrength(
+    score,
+    entropy,
+    crackTime,
+    tips
+  );
 }
 
 /* ======================================================
@@ -264,11 +414,13 @@ function App() {
 
     if (!copied) return;
 
-    const timer = setTimeout(() => {
-      setCopied(false);
-    }, 1800);
+    const timer =
+      setTimeout(() => {
+        setCopied(false);
+      }, 1800);
 
-    return () => clearTimeout(timer);
+    return () =>
+      clearTimeout(timer);
 
   }, [copied]);
 
@@ -290,6 +442,8 @@ function App() {
         generateSecurePassword(18);
 
       setPassword(generated);
+
+      setShowPassword(true);
 
     } catch (err) {
 
@@ -315,15 +469,16 @@ function App() {
 
     try {
 
-      await navigator.clipboard.writeText(
-        password
-      );
+      await navigator.clipboard
+        .writeText(password);
 
       setCopied(true);
 
     } catch {
 
-      alert('No se pudo copiar');
+      alert(
+        'No se pudo copiar'
+      );
     }
   };
 
@@ -344,11 +499,11 @@ function App() {
         <div className="header">
 
           <h1>
-            SafePass AI 🛡️
+            SafePass 🛡️
           </h1>
 
           <p className="subtitle">
-            Edge AI Password Analyzer
+            Advanced Password Analyzer
           </p>
 
         </div>
@@ -367,7 +522,9 @@ function App() {
             }
             value={password}
             onChange={(e) =>
-              setPassword(e.target.value)
+              setPassword(
+                e.target.value
+              )
             }
             placeholder="Escribe tu contraseña..."
             className="password-input"
@@ -377,10 +534,16 @@ function App() {
           <button
             className="toggle-btn"
             onClick={() =>
-              setShowPassword(!showPassword)
+              setShowPassword(
+                !showPassword
+              )
             }
           >
-            {showPassword ? '🙈' : '👁️'}
+            {
+              showPassword
+                ? '🙈'
+                : '👁️'
+            }
           </button>
 
         </div>
@@ -394,8 +557,10 @@ function App() {
           <div
             className="meter-fill"
             style={{
-              width: `${analysis.progress}%`,
-              background: analysis.color
+              width:
+                `${analysis.progress}%`,
+              background:
+                analysis.color
             }}
           />
 
@@ -409,16 +574,21 @@ function App() {
 
           <h2
             style={{
-              color: analysis.color
+              color:
+                analysis.color
             }}
           >
             {analysis.label}
           </h2>
 
           <span className="entropy">
+
             Entropía:
             {' '}
-            {analysis.entropy} bits
+            {analysis.entropy}
+            {' '}
+            bits
+
           </span>
 
         </div>
@@ -430,7 +600,7 @@ function App() {
         <div className="crack-box">
 
           <span>
-            ⏳ Tiempo estimado de crackeo:
+            ⏳ Tiempo estimado de vulneración:
           </span>
 
           <strong>
@@ -440,7 +610,7 @@ function App() {
         </div>
 
         {/* ======================================================
-            AI TIPS
+            SECURITY TIPS
         ====================================================== */}
 
         {
@@ -449,7 +619,7 @@ function App() {
             <div className="tips-box">
 
               <h3>
-                Recomendaciones IA
+                Recomendaciones de seguridad
               </h3>
 
               {
@@ -482,7 +652,7 @@ function App() {
             {
               loading
                 ? 'Generando...'
-                : 'Generar Segura'
+                : 'Generar contraseña'
             }
 
           </button>
@@ -518,11 +688,11 @@ function App() {
           </div>
 
           <div className="requirement">
-            ✔ Mezcla de letras
+            ✔ Letras mayúsculas y minúsculas
           </div>
 
           <div className="requirement">
-            ✔ Sin patrones humanos
+            ✔ Sin patrones comunes
           </div>
 
         </div>
@@ -534,15 +704,19 @@ function App() {
         <div className="info-footer">
 
           <p>
-            🔒 Privacy by Design
+            🔒 Privacidad garantizada
           </p>
 
           <p>
-            Todo el análisis ocurre localmente.
+            El análisis se realiza localmente.
           </p>
 
           <p>
-            Funciona incluso sin internet.
+            No se envían datos a servidores externos.
+          </p>
+
+          <p>
+            Funciona incluso sin conexión.
           </p>
 
         </div>
